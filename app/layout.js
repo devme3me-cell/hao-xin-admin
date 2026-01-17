@@ -1,4 +1,5 @@
 import './globals.css';
+import Providers from '@/components/Providers';
 
 export const metadata = {
   title: '壕芯實業 - 管理系統',
@@ -17,7 +18,11 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }

@@ -3,18 +3,32 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { getProperties, deleteProperty, deleteFile } from '@/lib/supabase';
+import { useAuth, signOut } from '@/lib/auth';
 
 export default function PropertyListPage() {
+  const router = useRouter();
+  const { user } = useAuth();
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [deletingId, setDeletingId] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // Logo URL - use local logo from public folder
   const logoUrl = '/logo.png';
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   useEffect(() => {
     loadProperties();
@@ -146,30 +160,122 @@ export default function PropertyListPage() {
             </div>
           </div>
 
-          <Link
-            href="/dashboard"
-            style={{
-              padding: '12px 24px',
-              background: 'linear-gradient(135deg, #D4AF37 0%, #F5D76E 50%, #C5A028 100%)',
-              border: 'none',
-              borderRadius: '10px',
-              color: '#000000',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 4px 16px rgba(212, 175, 55, 0.3)',
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            新增物件
-          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Link
+              href="/dashboard"
+              style={{
+                padding: '12px 24px',
+                background: 'linear-gradient(135deg, #D4AF37 0%, #F5D76E 50%, #C5A028 100%)',
+                border: 'none',
+                borderRadius: '10px',
+                color: '#000000',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                boxShadow: '0 4px 16px rgba(212, 175, 55, 0.3)',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              新增物件
+            </Link>
+
+            {/* User Menu */}
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '12px',
+                  background: 'rgba(212, 175, 55, 0.1)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </button>
+
+              {showUserMenu && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '8px',
+                  background: 'rgba(20, 20, 20, 0.98)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(212, 175, 55, 0.2)',
+                  borderRadius: '12px',
+                  padding: '8px',
+                  minWidth: '200px',
+                  boxShadow: '0 16px 48px rgba(0, 0, 0, 0.5)',
+                  zIndex: 100,
+                }}>
+                  {/* User Info */}
+                  <div style={{
+                    padding: '12px 16px',
+                    borderBottom: '1px solid rgba(212, 175, 55, 0.1)',
+                    marginBottom: '8px',
+                  }}>
+                    <p style={{
+                      color: 'rgba(255,255,255,0.5)',
+                      fontSize: '11px',
+                      margin: '0 0 4px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '1px',
+                    }}>登入帳號</p>
+                    <p style={{
+                      color: '#D4AF37',
+                      fontSize: '14px',
+                      margin: 0,
+                      fontWeight: '500',
+                      wordBreak: 'break-all',
+                    }}>{user?.email || '使用者'}</p>
+                  </div>
+
+                  {/* Logout Button */}
+                  <button
+                    onClick={handleLogout}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: 'rgba(244, 67, 54, 0.1)',
+                      border: '1px solid rgba(244, 67, 54, 0.2)',
+                      borderRadius: '8px',
+                      color: '#F44336',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                      <polyline points="16 17 21 12 16 7"/>
+                      <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    登出
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 

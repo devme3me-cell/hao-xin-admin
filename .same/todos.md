@@ -8,10 +8,14 @@
 - [x] Configure Supabase environment variables
 - [x] Fix logo display issue
 - [x] Start dev server
+- [x] Add property listing page (/dashboard/list)
+- [x] Add Supabase database CRUD functions
+- [x] Add navigation between dashboard and listing
+- [x] Push updates to GitHub
 
 ## Pending
-- [ ] Upload logo to Supabase Storage (optional)
+- [ ] Create properties table in Supabase (SQL provided in README)
 - [ ] Set up Supabase Storage bucket policies
+- [ ] Upload logo to Supabase Storage (optional)
 - [ ] Add Supabase Auth for real authentication
-- [ ] Connect to Supabase Database to store form data
 - [ ] Deploy to Netlify or Zeabur

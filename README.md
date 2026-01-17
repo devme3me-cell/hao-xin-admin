@@ -1,11 +1,12 @@
 # 壕芯實業 - 管理系統
 
-物件資料登錄管理系統，使用 Next.js 14 + Supabase Storage 開發。
+物件資料登錄管理系統，使用 Next.js 14 + Supabase 開發。
 
 ## 功能特色
 
-- 🔐 登入頁面
+- 🔐 Supabase Auth 登入驗證
 - 📝 物件資料表單
+- 📋 物件列表頁面（搜尋、篩選、刪除）
 - 🖼️ 圖片上傳（支援拖放，最多3張）
 - 🗺️ 台灣縣市/鄉鎮區聯動選單
 - 🎨 黑金主題設計
@@ -13,8 +14,10 @@
 ## 技術棧
 
 - **框架**: Next.js 14 (App Router)
+- **驗證**: Supabase Auth
+- **資料庫**: Supabase Database (PostgreSQL)
 - **儲存**: Supabase Storage
-- **部署**: Zeabur
+- **部署**: Zeabur / Netlify
 
 ---
 
@@ -26,11 +29,52 @@
 2. 進入 **Storage** 建立 bucket：
    - Bucket 名稱: `uploads`
    - 設為 **Public bucket**（允許公開讀取）
-3. 上傳 Logo 圖片：
-   - 在 `uploads` bucket 中上傳 `logo.png`
-4. 複製專案設定：
+3. 複製專案設定：
    - 進入 **Settings > API**
    - 複製 `Project URL` 和 `anon public` key
+
+### 1.1 建立管理員帳號
+
+進入 Supabase Dashboard > **Authentication** > **Users**，點擊 **Add user** > **Create new user**：
+
+- Email: 輸入管理員電子郵件
+- Password: 設定密碼
+- 勾選 **Auto Confirm User**（自動確認用戶）
+
+或者在 SQL Editor 執行：
+
+```sql
+-- 建立管理員用戶（請替換 email 和 password）
+INSERT INTO auth.users (
+  instance_id,
+  id,
+  aud,
+  role,
+  email,
+  encrypted_password,
+  email_confirmed_at,
+  created_at,
+  updated_at,
+  confirmation_token,
+  email_change,
+  email_change_token_new,
+  recovery_token
+) VALUES (
+  '00000000-0000-0000-0000-000000000000',
+  gen_random_uuid(),
+  'authenticated',
+  'authenticated',
+  'admin@example.com',  -- 替換為您的 email
+  crypt('your_password_here', gen_salt('bf')),  -- 替換為您的密碼
+  NOW(),
+  NOW(),
+  NOW(),
+  '',
+  '',
+  '',
+  ''
+);
+```
 
 ### 2. 本地開發
 

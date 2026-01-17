@@ -1,36 +1,96 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useAuth, signIn } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { user, loading } = useAuth();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState('');
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/dashboard');
+    }
+  }, [user, loading, router]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    setError(''); // Clear error when user types
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
-    // Simulate login - replace with actual authentication logic
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await signIn(formData.email, formData.password);
       router.push('/dashboard');
-    }, 1500);
+    } catch (err) {
+      console.error('Login error:', err);
+      // Handle specific error messages
+      if (err.message.includes('Invalid login credentials')) {
+        setError('帳號或密碼錯誤');
+      } else if (err.message.includes('Email not confirmed')) {
+        setError('請先驗證您的電子郵件');
+      } else {
+        setError(err.message || '登入失敗，請稍後再試');
+      }
+    }
+
+    setIsLoading(false);
   };
 
   // Logo URL - use local logo from public folder
   const logoUrl = '/logo.png';
+
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: '#000000',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <svg
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          style={{ animation: 'spin 1s linear infinite' }}
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="#D4AF37"
+            strokeWidth="2"
+            fill="none"
+            strokeDasharray="31.4 31.4"
+            strokeLinecap="round"
+          />
+        </svg>
+        <style jsx global>{`
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -103,9 +163,30 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div style={{
+            padding: '14px 18px',
+            background: 'rgba(244, 67, 54, 0.1)',
+            border: '1px solid rgba(244, 67, 54, 0.3)',
+            borderRadius: '12px',
+            marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F44336" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="15" y1="9" x2="9" y2="15"/>
+              <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            <span style={{ color: '#F44336', fontSize: '14px' }}>{error}</span>
+          </div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          {/* Username Field */}
+          {/* Email Field */}
           <div style={{ marginBottom: '24px' }}>
             <label style={{
               display: 'block',
@@ -116,7 +197,7 @@ export default function LoginPage() {
               textTransform: 'uppercase',
               letterSpacing: '1.5px',
             }}>
-              帳號
+              電子郵件
             </label>
             <div style={{ position: 'relative' }}>
               <div style={{
@@ -127,15 +208,15 @@ export default function LoginPage() {
                 pointerEvents: 'none',
               }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(212, 175, 55, 0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
                 </svg>
               </div>
               <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => handleInputChange('username', e.target.value)}
-                placeholder="請輸入帳號"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                placeholder="請輸入電子郵件"
                 required
                 style={{
                   width: '100%',
@@ -147,6 +228,7 @@ export default function LoginPage() {
                   fontSize: '15px',
                   outline: 'none',
                   transition: 'all 0.3s ease',
+                  boxSizing: 'border-box',
                 }}
               />
             </div>
@@ -194,6 +276,7 @@ export default function LoginPage() {
                   fontSize: '15px',
                   outline: 'none',
                   transition: 'all 0.3s ease',
+                  boxSizing: 'border-box',
                 }}
               />
               <button
@@ -352,6 +435,13 @@ export default function LoginPage() {
       }}>
         © 2025 壕芯實業 · 保留所有權利
       </p>
+
+      <style jsx global>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }
