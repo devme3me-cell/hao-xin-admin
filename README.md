@@ -62,7 +62,50 @@ npm run dev
    - `NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET`
 4. 點擊部署
 
-### 4. Supabase Storage 政策設定（重要）
+### 4. Supabase Database 設定（重要）
+
+進入 Supabase Dashboard > SQL Editor，執行以下 SQL 建立資料表：
+
+```sql
+-- Create properties table
+CREATE TABLE properties (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  title VARCHAR(50) DEFAULT '先生',
+  transaction_type VARCHAR(10) DEFAULT '售',
+  city VARCHAR(100),
+  district VARCHAR(100),
+  property TEXT,
+  images JSONB DEFAULT '[]'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ
+);
+
+-- Enable Row Level Security
+ALTER TABLE properties ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read access
+CREATE POLICY "Allow public read" ON properties
+  FOR SELECT USING (true);
+
+-- Allow public insert
+CREATE POLICY "Allow public insert" ON properties
+  FOR INSERT WITH CHECK (true);
+
+-- Allow public update
+CREATE POLICY "Allow public update" ON properties
+  FOR UPDATE USING (true);
+
+-- Allow public delete
+CREATE POLICY "Allow public delete" ON properties
+  FOR DELETE USING (true);
+
+-- Create index for faster queries
+CREATE INDEX idx_properties_created_at ON properties(created_at DESC);
+CREATE INDEX idx_properties_transaction_type ON properties(transaction_type);
+```
+
+### 5. Supabase Storage 政策設定（重要）
 
 進入 Supabase Dashboard > Storage > Policies，為 `uploads` bucket 新增以下政策：
 

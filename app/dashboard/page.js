@@ -2,7 +2,8 @@
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { uploadFile, deleteFile } from '@/lib/supabase';
+import Link from 'next/link';
+import { uploadFile, deleteFile, createProperty } from '@/lib/supabase';
 import { taiwanData } from '@/lib/taiwan-data';
 
 export default function DashboardPage() {
@@ -110,17 +111,11 @@ export default function DashboardPage() {
     const submitData = {
       ...formData,
       images: images.map(img => ({ url: img.url, path: img.path })),
-      createdAt: new Date().toISOString(),
     };
 
-    console.log('Form submitted:', submitData);
-
-    // Here you would typically save to Supabase database
-    // const { data, error } = await supabase.from('properties').insert([submitData]);
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-      alert('表單已提交！');
+    try {
+      await createProperty(submitData);
+      alert('表單已成功提交！');
       // Reset form
       setFormData({
         name: '',
@@ -131,7 +126,12 @@ export default function DashboardPage() {
         district: '',
       });
       setImages([]);
-    }, 1000);
+    } catch (error) {
+      console.error('Submit error:', error);
+      alert('提交失敗：' + (error.message || '請稍後再試'));
+    }
+
+    setIsSubmitting(false);
   };
 
   const inputStyle = {
@@ -171,43 +171,75 @@ export default function DashboardPage() {
         <div style={{
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
           gap: '16px',
-          marginBottom: '8px',
         }}>
-          <div style={{
-            width: '48px',
-            height: '48px',
-            background: 'linear-gradient(135deg, #D4AF37 0%, #F5D76E 50%, #C5A028 100%)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 8px 32px rgba(212, 175, 55, 0.3)',
-            position: 'relative',
-            overflow: 'hidden',
-          }}>
-            <Image
-              src={logoUrl}
-              alt="Logo"
-              fill
-              style={{ objectFit: 'contain', padding: '8px' }}
-              unoptimized
-            />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              background: 'linear-gradient(135deg, #D4AF37 0%, #F5D76E 50%, #C5A028 100%)',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 8px 32px rgba(212, 175, 55, 0.3)',
+              position: 'relative',
+              overflow: 'hidden',
+            }}>
+              <Image
+                src={logoUrl}
+                alt="Logo"
+                fill
+                style={{ objectFit: 'contain', padding: '8px' }}
+                unoptimized
+              />
+            </div>
+            <div>
+              <h1 style={{
+                color: '#D4AF37',
+                fontSize: '28px',
+                fontWeight: '700',
+                margin: 0,
+                letterSpacing: '0.5px',
+              }}>管理後台</h1>
+              <p style={{
+                color: 'rgba(212, 175, 55, 0.5)',
+                fontSize: '14px',
+                margin: 0,
+              }}>物件資料登錄系統</p>
+            </div>
           </div>
-          <div>
-            <h1 style={{
+
+          <Link
+            href="/dashboard/list"
+            style={{
+              padding: '12px 24px',
+              background: 'rgba(212, 175, 55, 0.1)',
+              border: '1px solid rgba(212, 175, 55, 0.3)',
+              borderRadius: '10px',
               color: '#D4AF37',
-              fontSize: '28px',
-              fontWeight: '700',
-              margin: 0,
-              letterSpacing: '0.5px',
-            }}>管理後台</h1>
-            <p style={{
-              color: 'rgba(212, 175, 55, 0.5)',
               fontSize: '14px',
-              margin: 0,
-            }}>物件資料登錄系統</p>
-          </div>
+              fontWeight: '500',
+              cursor: 'pointer',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            查看物件列表
+          </Link>
         </div>
       </div>
 
