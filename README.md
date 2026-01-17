@@ -149,30 +149,49 @@ CREATE INDEX idx_properties_created_at ON properties(created_at DESC);
 CREATE INDEX idx_properties_transaction_type ON properties(transaction_type);
 ```
 
-### 5. Supabase Storage 政策設定（重要）
+### 5. Supabase Storage 設定（重要）
 
-進入 Supabase Dashboard > Storage > Policies，為 `uploads` bucket 新增以下政策：
+#### 步驟 1: 建立 Storage Bucket
 
-**允許公開讀取：**
+1. 進入 Supabase Dashboard > **Storage**
+2. 點擊 **New bucket**
+3. 設定：
+   - **Name**: `uploads`
+   - **Public bucket**: ✅ 勾選（允許公開讀取）
+4. 點擊 **Create bucket**
+
+#### 步驟 2: 設定 Storage 政策
+
+進入 **SQL Editor**，執行以下 SQL：
+
 ```sql
-CREATE POLICY "Public Access"
+-- 允許公開讀取所有檔案
+CREATE POLICY "Public read access"
 ON storage.objects FOR SELECT
 USING (bucket_id = 'uploads');
-```
 
-**允許認證用戶上傳：**
-```sql
-CREATE POLICY "Allow uploads"
+-- 允許已登入用戶上傳檔案
+CREATE POLICY "Authenticated users can upload"
 ON storage.objects FOR INSERT
+TO authenticated
 WITH CHECK (bucket_id = 'uploads');
-```
 
-**允許認證用戶刪除：**
-```sql
-CREATE POLICY "Allow delete"
+-- 允許已登入用戶更新檔案
+CREATE POLICY "Authenticated users can update"
+ON storage.objects FOR UPDATE
+TO authenticated
+USING (bucket_id = 'uploads');
+
+-- 允許已登入用戶刪除檔案
+CREATE POLICY "Authenticated users can delete"
 ON storage.objects FOR DELETE
+TO authenticated
 USING (bucket_id = 'uploads');
 ```
+
+#### 一鍵設定（推薦）
+
+您也可以直接執行專案中的 `supabase-setup.sql` 檔案，它包含了資料庫和儲存的完整設定。
 
 ---
 
@@ -185,9 +204,15 @@ hao-xin-admin/
 │   ├── layout.js            # 根佈局
 │   ├── page.js              # 登入頁面 (/)
 │   └── dashboard/
-│       └── page.js          # 管理後台 (/dashboard)
-├── components/              # 共用元件（未來擴展）
+│       ├── layout.js        # Dashboard 佈局 (受保護路由)
+│       ├── page.js          # 管理後台 (/dashboard)
+│       └── list/
+│           └── page.js      # 物件列表 (/dashboard/list)
+├── components/
+│   ├── Providers.js         # 全域 Providers
+│   └── ProtectedRoute.js    # 受保護路由元件
 ├── lib/
+│   ├── auth.js              # Supabase Auth 函數
 │   ├── supabase.js          # Supabase 客戶端與工具函數
 │   └── taiwan-data.js       # 台灣縣市資料
 ├── public/                  # 靜態資源
@@ -195,6 +220,7 @@ hao-xin-admin/
 ├── .gitignore
 ├── next.config.js           # Next.js 設定
 ├── package.json
+├── supabase-setup.sql       # Supabase 完整設定 SQL
 └── README.md
 ```
 
