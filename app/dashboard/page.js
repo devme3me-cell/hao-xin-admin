@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -26,54 +26,59 @@ export default function DashboardPage() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const fileInputRef = useRef(null);
 
-  const handleLogout = async () => {
+  // Prefetch list page for faster navigation
+  useEffect(() => {
+    router.prefetch('/dashboard/list');
+  }, [router]);
+
+  const handleLogout = useCallback(async () => {
     try {
       await signOut();
-      router.push('/');
+      router.replace('/');
     } catch (error) {
-      console.error('Logout error:', error);
+      // Silent fail
     }
-  };
+  }, [router]);
 
   // Logo URL - use local logo from public folder
   const logoUrl = '/logo.png';
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  }, []);
 
-  const handleCityChange = (cityName) => {
+  const handleCityChange = useCallback((cityName) => {
     setFormData(prev => ({ ...prev, city: cityName, district: '' }));
-  };
+  }, []);
 
-  const getDistricts = () => {
+  const getDistricts = useMemo(() => {
     const city = taiwanData.find(c => c.name === formData.city);
     return city ? city.districts : [];
-  };
+  }, [formData.city]);
 
-  const handleDragOver = (e) => {
+  const handleDragOver = useCallback((e) => {
     e.preventDefault();
     setIsDragging(true);
-  };
+  }, []);
 
-  const handleDragLeave = (e) => {
+  const handleDragLeave = useCallback((e) => {
     e.preventDefault();
     setIsDragging(false);
-  };
+  }, []);
 
-  const handleDrop = (e) => {
+  const handleDrop = useCallback((e) => {
     e.preventDefault();
     setIsDragging(false);
     const files = Array.from(e.dataTransfer.files).filter(file =>
       file.type.startsWith('image/')
     );
     addImages(files);
-  };
+  }, []);
 
-  const handleFileSelect = (e) => {
+  const handleFileSelect = useCallback((e) => {
     const files = Array.from(e.target.files);
     addImages(files);
-  };
+  }, []);
 
   const addImages = async (files) => {
     const remainingSlots = 3 - images.length;
@@ -528,7 +533,7 @@ export default function DashboardPage() {
                   }}
                 >
                   <option value="">{formData.city ? '請選擇鄉鎮市區' : '請先選擇縣市'}</option>
-                  {getDistricts().map(district => (
+                  {getDistricts.map(district => (
                     <option key={`${district.zip}-${district.name}`} value={district.name}>
                       {district.zip} {district.name}
                     </option>

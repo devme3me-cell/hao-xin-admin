@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth, signIn } from '@/lib/auth';
@@ -17,40 +17,44 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
 
+  // Prefetch dashboard for faster navigation
+  useEffect(() => {
+    router.prefetch('/dashboard');
+  }, [router]);
+
   // Redirect to dashboard if already logged in
   useEffect(() => {
     if (!loading && user) {
-      router.push('/dashboard');
+      router.replace('/dashboard');
     }
   }, [user, loading, router]);
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    setError(''); // Clear error when user types
-  };
+    setError('');
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
     try {
       await signIn(formData.email, formData.password);
-      router.push('/dashboard');
+      router.replace('/dashboard');
     } catch (err) {
-      console.error('Login error:', err);
       // Handle specific error messages
-      if (err.message.includes('Invalid login credentials')) {
+      const message = err?.message || '';
+      if (message.includes('Invalid login credentials')) {
         setError('帳號或密碼錯誤');
-      } else if (err.message.includes('Email not confirmed')) {
+      } else if (message.includes('Email not confirmed')) {
         setError('請先驗證您的電子郵件');
       } else {
-        setError(err.message || '登入失敗，請稍後再試');
+        setError(message || '登入失敗，請稍後再試');
       }
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
-  };
+  }, [formData.email, formData.password, router]);
 
   // Logo URL - use local logo from public folder
   const logoUrl = '/logo.png';

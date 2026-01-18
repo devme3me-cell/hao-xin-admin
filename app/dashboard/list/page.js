@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -21,31 +21,37 @@ export default function PropertyListPage() {
   // Logo URL - use local logo from public folder
   const logoUrl = '/logo.png';
 
-  const handleLogout = async () => {
+  // Prefetch dashboard for faster navigation
+  useEffect(() => {
+    router.prefetch('/dashboard');
+  }, [router]);
+
+  const handleLogout = useCallback(async () => {
     try {
       await signOut();
-      router.push('/');
+      router.replace('/');
     } catch (error) {
-      console.error('Logout error:', error);
+      // Silent fail
     }
-  };
+  }, [router]);
 
-  useEffect(() => {
-    loadProperties();
-  }, []);
-
-  const loadProperties = async () => {
+  const loadProperties = useCallback(async () => {
     setIsLoading(true);
     try {
       const data = await getProperties();
       setProperties(data);
     } catch (error) {
-      console.error('Failed to load properties:', error);
+      // Silent fail - empty list will show
     }
     setIsLoading(false);
   };
 
-  const handleDelete = async (property) => {
+  // Load properties on mount
+  useEffect(() => {
+    loadProperties();
+  }, [loadProperties]);
+
+  const handleDelete = useCallback(async (property) => {
     if (!confirm(`確定要刪除「${property.name}${property.title}」的物件嗎？`)) {
       return;
     }
@@ -54,35 +60,38 @@ export default function PropertyListPage() {
     try {
       // Delete images from storage first
       if (property.images && property.images.length > 0) {
-        for (const img of property.images) {
-          if (img.path) {
-            await deleteFile(img.path).catch(console.error);
-          }
-        }
+        await Promise.all(
+          property.images.map(img =>
+            img.path ? deleteFile(img.path).catch(() => {}) : Promise.resolve()
+          )
+        );
       }
       // Delete property record
       await deleteProperty(property.id);
       setProperties(prev => prev.filter(p => p.id !== property.id));
     } catch (error) {
-      console.error('Delete failed:', error);
       alert('刪除失敗，請稍後再試');
     }
     setDeletingId(null);
-  };
+  }, []);
 
-  const filteredProperties = properties.filter(property => {
-    const matchesSearch =
-      property.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.property?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.district?.toLowerCase().includes(searchTerm.toLowerCase());
+  // Memoized filtered properties for better performance
+  const filteredProperties = useMemo(() => {
+    const searchLower = searchTerm.toLowerCase();
+    return properties.filter(property => {
+      const matchesSearch = !searchTerm ||
+        property.name?.toLowerCase().includes(searchLower) ||
+        property.property?.toLowerCase().includes(searchLower) ||
+        property.city?.toLowerCase().includes(searchLower) ||
+        property.district?.toLowerCase().includes(searchLower);
 
-    const matchesFilter = filterType === 'all' || property.transaction_type === filterType;
+      const matchesFilter = filterType === 'all' || property.transaction_type === filterType;
 
-    return matchesSearch && matchesFilter;
-  });
+      return matchesSearch && matchesFilter;
+    });
+  }, [properties, searchTerm, filterType]);
 
-  const formatDate = (dateString) => {
+  const formatDate = useCallback((dateString) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
     return date.toLocaleDateString('zh-TW', {
@@ -92,18 +101,18 @@ export default function PropertyListPage() {
       hour: '2-digit',
       minute: '2-digit',
     });
-  };
+  }, []);
 
-  const inputStyle = {
+  const inputStyle = useMemo(() => ({
     padding: '12px 16px',
-    background: 'rgba(212, 175, 55, 0.05)',
-    border: '1px solid rgba(212, 175, 55, 0.2)',
-    borderRadius: '10px',
+    background: 'rgba(255, 255, 255, 0.03)',
+    border: '1.5px solid rgba(212, 175, 55, 0.15)',
+    borderRadius: '12px',
     color: '#ffffff',
     fontSize: '14px',
     outline: 'none',
-    transition: 'all 0.3s ease',
-  };
+    transition: 'all 0.2s ease',
+  }), []);
 
   return (
     <div style={{
