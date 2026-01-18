@@ -55,43 +55,6 @@ export default function LoginPage() {
   // Logo URL - use local logo from public folder
   const logoUrl = '/logo.png';
 
-  // Show loading state while checking auth
-  if (loading) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        background: '#000000',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-        <svg
-          width="48"
-          height="48"
-          viewBox="0 0 24 24"
-          style={{ animation: 'spin 1s linear infinite' }}
-        >
-          <circle
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="#D4AF37"
-            strokeWidth="2"
-            fill="none"
-            strokeDasharray="31.4 31.4"
-            strokeLinecap="round"
-          />
-        </svg>
-        <style jsx global>{`
-          @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
   return (
     <div style={{
       minHeight: '100vh',

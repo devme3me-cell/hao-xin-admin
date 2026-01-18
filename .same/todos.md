@@ -15,10 +15,16 @@
 - [x] Create AuthProvider context
 - [x] Add ProtectedRoute component
 - [x] Add user menu with logout functionality
+- [x] Create complete supabase-setup.sql file
+- [x] Document Storage bucket setup instructions
 - [x] Push updates to GitHub
 
-## Pending
+## User Setup Required
 - [ ] Create admin user in Supabase Auth
-- [ ] Create properties table in Supabase (SQL provided in README)
-- [ ] Set up Supabase Storage bucket policies
+- [ ] Run supabase-setup.sql in Supabase SQL Editor
+- [ ] Create 'uploads' Storage bucket (public)
+
+## Future Improvements
 - [ ] Deploy to Netlify or Zeabur
+- [ ] Add password reset functionality
+- [ ] Add edit functionality to property listing
