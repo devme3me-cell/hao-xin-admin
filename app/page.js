@@ -58,55 +58,66 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#000000',
+      minHeight: '100dvh',
+      background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 100%)',
       display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '20px',
+      padding: '16px',
+      paddingTop: 'max(16px, env(safe-area-inset-top))',
+      paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
       position: 'relative',
       overflow: 'hidden',
     }}>
       {/* Background decorative elements */}
       <div style={{
         position: 'absolute',
-        top: '-20%',
-        right: '-10%',
-        width: '500px',
-        height: '500px',
-        background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%)',
+        top: '-30%',
+        right: '-20%',
+        width: '300px',
+        height: '300px',
+        background: 'radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%)',
         borderRadius: '50%',
         pointerEvents: 'none',
+        filter: 'blur(40px)',
       }} />
       <div style={{
         position: 'absolute',
-        bottom: '-30%',
-        left: '-15%',
-        width: '600px',
-        height: '600px',
-        background: 'radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%)',
+        bottom: '-20%',
+        left: '-20%',
+        width: '350px',
+        height: '350px',
+        background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%)',
         borderRadius: '50%',
         pointerEvents: 'none',
+        filter: 'blur(40px)',
       }} />
 
       {/* Login Card */}
       <div style={{
         width: '100%',
-        maxWidth: '420px',
-        background: 'rgba(212, 175, 55, 0.03)',
+        maxWidth: '400px',
+        background: 'linear-gradient(145deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.95) 100%)',
         backdropFilter: 'blur(20px)',
-        borderRadius: '24px',
-        border: '1px solid rgba(212, 175, 55, 0.15)',
-        padding: '48px 40px',
-        boxShadow: '0 24px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderRadius: '28px',
+        border: '1px solid rgba(212, 175, 55, 0.12)',
+        padding: 'clamp(24px, 6vw, 40px)',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.03) inset',
         position: 'relative',
         zIndex: 1,
       }}>
         {/* Logo */}
         <div style={{
           textAlign: 'center',
-          marginBottom: '40px',
+          marginBottom: 'clamp(24px, 5vw, 36px)',
         }}>
-          <div style={{ position: 'relative', height: '60px', marginBottom: '16px' }}>
+          <div style={{
+            position: 'relative',
+            height: 'clamp(50px, 12vw, 65px)',
+            marginBottom: '12px',
+          }}>
             <Image
               src={logoUrl}
               alt="壕芯實業"
@@ -117,10 +128,11 @@ export default function LoginPage() {
             />
           </div>
           <p style={{
-            color: 'rgba(212, 175, 55, 0.6)',
-            fontSize: '14px',
+            color: 'rgba(212, 175, 55, 0.5)',
+            fontSize: 'clamp(12px, 3vw, 14px)',
             margin: 0,
-            letterSpacing: '2px',
+            letterSpacing: '3px',
+            fontWeight: '500',
           }}>
             管理系統登入
           </p>
@@ -150,13 +162,13 @@ export default function LoginPage() {
         {/* Form */}
         <form onSubmit={handleSubmit}>
           {/* Email Field */}
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '20px' }}>
             <label style={{
               display: 'block',
               color: '#D4AF37',
-              fontSize: '12px',
-              fontWeight: '500',
-              marginBottom: '10px',
+              fontSize: '11px',
+              fontWeight: '600',
+              marginBottom: '8px',
               textTransform: 'uppercase',
               letterSpacing: '1.5px',
             }}>
@@ -165,12 +177,12 @@ export default function LoginPage() {
             <div style={{ position: 'relative' }}>
               <div style={{
                 position: 'absolute',
-                left: '16px',
+                left: '14px',
                 top: '50%',
                 transform: 'translateY(-50%)',
                 pointerEvents: 'none',
               }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(212, 175, 55, 0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(212, 175, 55, 0.4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                   <polyline points="22,6 12,13 2,6"/>
                 </svg>
@@ -181,16 +193,17 @@ export default function LoginPage() {
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 placeholder="請輸入電子郵件"
                 required
+                autoComplete="email"
                 style={{
                   width: '100%',
-                  padding: '16px 20px 16px 48px',
-                  background: 'rgba(212, 175, 55, 0.05)',
-                  border: '1px solid rgba(212, 175, 55, 0.2)',
-                  borderRadius: '12px',
+                  padding: '14px 16px 14px 44px',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1.5px solid rgba(212, 175, 55, 0.15)',
+                  borderRadius: '14px',
                   color: '#ffffff',
-                  fontSize: '15px',
+                  fontSize: '16px',
                   outline: 'none',
-                  transition: 'all 0.3s ease',
+                  transition: 'all 0.2s ease',
                   boxSizing: 'border-box',
                 }}
               />
@@ -198,13 +211,13 @@ export default function LoginPage() {
           </div>
 
           {/* Password Field */}
-          <div style={{ marginBottom: '32px' }}>
+          <div style={{ marginBottom: '24px' }}>
             <label style={{
               display: 'block',
               color: '#D4AF37',
-              fontSize: '12px',
-              fontWeight: '500',
-              marginBottom: '10px',
+              fontSize: '11px',
+              fontWeight: '600',
+              marginBottom: '8px',
               textTransform: 'uppercase',
               letterSpacing: '1.5px',
             }}>
@@ -213,12 +226,12 @@ export default function LoginPage() {
             <div style={{ position: 'relative' }}>
               <div style={{
                 position: 'absolute',
-                left: '16px',
+                left: '14px',
                 top: '50%',
                 transform: 'translateY(-50%)',
                 pointerEvents: 'none',
               }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(212, 175, 55, 0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(212, 175, 55, 0.4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
@@ -229,16 +242,17 @@ export default function LoginPage() {
                 onChange={(e) => handleInputChange('password', e.target.value)}
                 placeholder="請輸入密碼"
                 required
+                autoComplete="current-password"
                 style={{
                   width: '100%',
-                  padding: '16px 48px 16px 48px',
-                  background: 'rgba(212, 175, 55, 0.05)',
-                  border: '1px solid rgba(212, 175, 55, 0.2)',
-                  borderRadius: '12px',
+                  padding: '14px 48px 14px 44px',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1.5px solid rgba(212, 175, 55, 0.15)',
+                  borderRadius: '14px',
                   color: '#ffffff',
-                  fontSize: '15px',
+                  fontSize: '16px',
                   outline: 'none',
-                  transition: 'all 0.3s ease',
+                  transition: 'all 0.2s ease',
                   boxSizing: 'border-box',
                 }}
               />
@@ -247,16 +261,18 @@ export default function LoginPage() {
                 onClick={() => setShowPassword(!showPassword)}
                 style={{
                   position: 'absolute',
-                  right: '16px',
+                  right: '12px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  padding: '4px',
+                  padding: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  minHeight: '44px',
+                  minWidth: '44px',
                 }}
               >
                 {showPassword ? (
@@ -279,22 +295,24 @@ export default function LoginPage() {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '32px',
+            marginBottom: '28px',
+            flexWrap: 'wrap',
+            gap: '12px',
           }}>
             <label style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '10px',
               cursor: 'pointer',
-              color: 'rgba(255,255,255,0.6)',
-              fontSize: '14px',
+              color: 'rgba(255,255,255,0.5)',
+              fontSize: '13px',
             }}>
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
                 style={{
-                  width: '18px',
+                  width: '20px',
                   height: '18px',
                   accentColor: '#D4AF37',
                   cursor: 'pointer',
@@ -306,8 +324,9 @@ export default function LoginPage() {
               href="#"
               style={{
                 color: '#D4AF37',
-                fontSize: '14px',
+                fontSize: '13px',
                 textDecoration: 'none',
+                fontWeight: '500',
               }}
             >
               忘記密碼？
@@ -320,24 +339,25 @@ export default function LoginPage() {
             disabled={isLoading}
             style={{
               width: '100%',
-              padding: '18px 32px',
+              padding: '16px 24px',
               background: isLoading
-                ? 'rgba(212, 175, 55, 0.5)'
-                : 'linear-gradient(135deg, #D4AF37 0%, #F5D76E 50%, #C5A028 100%)',
+                ? 'rgba(212, 175, 55, 0.4)'
+                : 'linear-gradient(135deg, #D4AF37 0%, #E8C547 50%, #C5A028 100%)',
               border: 'none',
-              borderRadius: '12px',
+              borderRadius: '14px',
               color: '#000000',
-              fontSize: '16px',
+              fontSize: '15px',
               fontWeight: '700',
               cursor: isLoading ? 'not-allowed' : 'pointer',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 8px 32px rgba(212, 175, 55, 0.3)',
+              transition: 'all 0.2s ease',
+              boxShadow: isLoading ? 'none' : '0 8px 24px rgba(212, 175, 55, 0.35)',
               textTransform: 'uppercase',
               letterSpacing: '2px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '10px',
+              minHeight: '52px',
             }}
           >
             {isLoading ? (
@@ -357,19 +377,19 @@ export default function LoginPage() {
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          margin: '32px 0',
-          gap: '16px',
+          margin: '24px 0',
+          gap: '12px',
         }}>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(212, 175, 55, 0.2)' }} />
-          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>或</span>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(212, 175, 55, 0.2)' }} />
+          <div style={{ flex: 1, height: '1px', background: 'rgba(212, 175, 55, 0.1)' }} />
+          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' }}>或</span>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(212, 175, 55, 0.1)' }} />
         </div>
 
         {/* Contact Admin */}
         <p style={{
           textAlign: 'center',
-          color: 'rgba(255,255,255,0.5)',
-          fontSize: '14px',
+          color: 'rgba(255,255,255,0.4)',
+          fontSize: '13px',
           margin: 0,
         }}>
           需要協助？
@@ -378,7 +398,8 @@ export default function LoginPage() {
             style={{
               color: '#D4AF37',
               textDecoration: 'none',
-              marginLeft: '8px',
+              marginLeft: '6px',
+              fontWeight: '500',
             }}
           >
             聯繫管理員
@@ -388,23 +409,14 @@ export default function LoginPage() {
 
       {/* Footer */}
       <p style={{
-        position: 'absolute',
-        bottom: '24px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        color: 'rgba(212, 175, 55, 0.3)',
-        fontSize: '12px',
-        margin: 0,
+        marginTop: '24px',
+        color: 'rgba(212, 175, 55, 0.25)',
+        fontSize: '11px',
+        textAlign: 'center',
+        letterSpacing: '0.5px',
       }}>
         © 2025 壕芯實業 · 保留所有權利
       </p>
-
-      <style jsx global>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

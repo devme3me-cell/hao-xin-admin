@@ -150,23 +150,23 @@ export default function DashboardPage() {
 
   const inputStyle = {
     width: '100%',
-    padding: '16px 20px',
-    background: 'rgba(212, 175, 55, 0.05)',
-    border: '1px solid rgba(212, 175, 55, 0.2)',
-    borderRadius: '12px',
+    padding: '14px 16px',
+    background: 'rgba(255, 255, 255, 0.03)',
+    border: '1.5px solid rgba(212, 175, 55, 0.15)',
+    borderRadius: '14px',
     color: '#ffffff',
     fontSize: '16px',
     outline: 'none',
-    transition: 'all 0.3s ease',
+    transition: 'all 0.2s ease',
     boxSizing: 'border-box',
   };
 
   const labelStyle = {
     display: 'block',
     color: '#D4AF37',
-    fontSize: '13px',
-    fontWeight: '500',
-    marginBottom: '10px',
+    fontSize: '11px',
+    fontWeight: '600',
+    marginBottom: '8px',
     textTransform: 'uppercase',
     letterSpacing: '1.5px',
   };
@@ -174,31 +174,34 @@ export default function DashboardPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#000000',
-      padding: '40px 20px',
+      minHeight: '100dvh',
+      background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 100%)',
+      padding: 'clamp(16px, 4vw, 40px) 16px',
+      paddingTop: 'max(16px, env(safe-area-inset-top))',
+      paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
     }}>
       {/* Header */}
       <div style={{
         maxWidth: '700px',
-        margin: '0 auto 30px',
+        margin: '0 auto 24px',
       }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '16px',
+          gap: '12px',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
             <div style={{
-              width: '48px',
-              height: '48px',
-              background: 'linear-gradient(135deg, #D4AF37 0%, #F5D76E 50%, #C5A028 100%)',
+              width: '44px',
+              height: '44px',
+              minWidth: '44px',
+              background: 'linear-gradient(135deg, #D4AF37 0%, #E8C547 50%, #C5A028 100%)',
               borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 8px 32px rgba(212, 175, 55, 0.3)',
+              boxShadow: '0 6px 20px rgba(212, 175, 55, 0.3)',
               position: 'relative',
               overflow: 'hidden',
             }}>
@@ -206,43 +209,44 @@ export default function DashboardPage() {
                 src={logoUrl}
                 alt="Logo"
                 fill
-                style={{ objectFit: 'contain', padding: '8px' }}
+                style={{ objectFit: 'contain', padding: '6px' }}
                 unoptimized
               />
             </div>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <h1 style={{
                 color: '#D4AF37',
-                fontSize: '28px',
+                fontSize: 'clamp(20px, 5vw, 26px)',
                 fontWeight: '700',
                 margin: 0,
-                letterSpacing: '0.5px',
+                letterSpacing: '0.3px',
               }}>管理後台</h1>
               <p style={{
-                color: 'rgba(212, 175, 55, 0.5)',
-                fontSize: '14px',
+                color: 'rgba(212, 175, 55, 0.45)',
+                fontSize: '12px',
                 margin: 0,
               }}>物件資料登錄系統</p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Link
               href="/dashboard/list"
               style={{
-                padding: '12px 24px',
-                background: 'rgba(212, 175, 55, 0.1)',
-                border: '1px solid rgba(212, 175, 55, 0.3)',
-                borderRadius: '10px',
+                padding: '10px 14px',
+                background: 'rgba(212, 175, 55, 0.08)',
+                border: '1px solid rgba(212, 175, 55, 0.2)',
+                borderRadius: '12px',
                 color: '#D4AF37',
-                fontSize: '14px',
+                fontSize: '13px',
                 fontWeight: '500',
                 cursor: 'pointer',
                 textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                transition: 'all 0.3s ease',
+                gap: '6px',
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
               }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -353,18 +357,19 @@ export default function DashboardPage() {
       <div style={{
         maxWidth: '700px',
         margin: '0 auto',
-        background: 'rgba(212, 175, 55, 0.03)',
+        background: 'linear-gradient(145deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.95) 100%)',
         backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         borderRadius: '24px',
-        border: '1px solid rgba(212, 175, 55, 0.15)',
-        padding: '40px',
-        boxShadow: '0 24px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
+        border: '1px solid rgba(212, 175, 55, 0.1)',
+        padding: 'clamp(20px, 5vw, 36px)',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.02) inset',
       }}>
         <form onSubmit={handleSubmit}>
           {/* Name and Title Row */}
-          <div style={{ display: 'flex', gap: '16px', marginBottom: '28px' }}>
-            {/* Name Field - 3/4 width */}
-            <div style={{ flex: 3 }}>
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            {/* Name Field */}
+            <div style={{ flex: '2 1 200px', minWidth: 0 }}>
               <label style={labelStyle}>姓名</label>
               <input
                 type="text"
@@ -376,14 +381,14 @@ export default function DashboardPage() {
               />
             </div>
 
-            {/* Title Dropdown - 1/4 width */}
-            <div style={{ flex: 1 }}>
+            {/* Title Dropdown */}
+            <div style={{ flex: '1 1 100px', minWidth: '100px' }}>
               <label style={labelStyle}>稱謂</label>
               <div style={{ position: 'relative' }}>
                 <select
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                  style={{ ...inputStyle, cursor: 'pointer', appearance: 'none' }}
+                  style={{ ...inputStyle, cursor: 'pointer', appearance: 'none', paddingRight: '40px' }}
                 >
                   <option value="先生">先生</option>
                   <option value="太太">太太</option>
@@ -391,12 +396,12 @@ export default function DashboardPage() {
                 </select>
                 <div style={{
                   position: 'absolute',
-                  right: '20px',
+                  right: '14px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   pointerEvents: 'none',
                 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(212, 175, 55, 0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="6 9 12 15 18 9"/>
                   </svg>
                 </div>
@@ -405,9 +410,9 @@ export default function DashboardPage() {
           </div>
 
           {/* Transaction Type Radio */}
-          <div style={{ marginBottom: '28px' }}>
+          <div style={{ marginBottom: '20px' }}>
             <label style={labelStyle}>交易類型</label>
-            <div style={{ display: 'flex', gap: '16px' }}>
+            <div style={{ display: 'flex', gap: '12px' }}>
               {['售', '收'].map((type) => (
                 <label
                   key={type}
@@ -416,17 +421,17 @@ export default function DashboardPage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '10px',
-                    padding: '16px 24px',
+                    gap: '8px',
+                    padding: '14px 20px',
                     background: formData.transactionType === type
-                      ? 'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(245, 215, 110, 0.1) 100%)'
-                      : 'rgba(212, 175, 55, 0.03)',
+                      ? 'linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(245, 215, 110, 0.08) 100%)'
+                      : 'rgba(255, 255, 255, 0.02)',
                     border: formData.transactionType === type
-                      ? '2px solid #D4AF37'
-                      : '1px solid rgba(212, 175, 55, 0.2)',
-                    borderRadius: '12px',
+                      ? '1.5px solid rgba(212, 175, 55, 0.6)'
+                      : '1.5px solid rgba(212, 175, 55, 0.12)',
+                    borderRadius: '14px',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease',
+                    transition: 'all 0.2s ease',
                   }}
                 >
                   <input
@@ -438,29 +443,29 @@ export default function DashboardPage() {
                     style={{ display: 'none' }}
                   />
                   <div style={{
-                    width: '20px',
-                    height: '20px',
+                    width: '18px',
+                    height: '18px',
                     borderRadius: '50%',
                     border: formData.transactionType === type
                       ? '2px solid #D4AF37'
-                      : '2px solid rgba(212, 175, 55, 0.4)',
+                      : '2px solid rgba(212, 175, 55, 0.3)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    transition: 'all 0.3s ease',
+                    transition: 'all 0.2s ease',
                   }}>
                     {formData.transactionType === type && (
                       <div style={{
-                        width: '10px',
-                        height: '10px',
+                        width: '8px',
+                        height: '8px',
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #D4AF37 0%, #F5D76E 100%)',
+                        background: '#D4AF37',
                       }}/>
                     )}
                   </div>
                   <span style={{
-                    color: formData.transactionType === type ? '#D4AF37' : 'rgba(255,255,255,0.6)',
-                    fontSize: '16px',
+                    color: formData.transactionType === type ? '#D4AF37' : 'rgba(255,255,255,0.5)',
+                    fontSize: '15px',
                     fontWeight: '500',
                   }}>
                     {type}
@@ -471,9 +476,9 @@ export default function DashboardPage() {
           </div>
 
           {/* City and District Dropdowns */}
-          <div style={{ display: 'flex', gap: '16px', marginBottom: '28px' }}>
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
             {/* City Dropdown */}
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: '1 1 140px', minWidth: 0 }}>
               <label style={labelStyle}>縣市</label>
               <div style={{ position: 'relative' }}>
                 <select
@@ -483,7 +488,8 @@ export default function DashboardPage() {
                     ...inputStyle,
                     cursor: 'pointer',
                     appearance: 'none',
-                    color: formData.city ? '#ffffff' : 'rgba(255,255,255,0.4)',
+                    color: formData.city ? '#ffffff' : 'rgba(255,255,255,0.35)',
+                    paddingRight: '40px',
                   }}
                 >
                   <option value="">請選擇縣市</option>
@@ -493,12 +499,12 @@ export default function DashboardPage() {
                 </select>
                 <div style={{
                   position: 'absolute',
-                  right: '20px',
+                  right: '14px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   pointerEvents: 'none',
                 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(212, 175, 55, 0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="6 9 12 15 18 9"/>
                   </svg>
                 </div>
@@ -506,7 +512,7 @@ export default function DashboardPage() {
             </div>
 
             {/* District Dropdown */}
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: '1 1 140px', minWidth: 0 }}>
               <label style={labelStyle}>鄉鎮市區</label>
               <div style={{ position: 'relative' }}>
                 <select
